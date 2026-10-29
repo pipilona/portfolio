@@ -267,6 +267,8 @@ const PROJECTS = [
   { title: "Next Big Thing", info: "Sfera by X5 Group — tech and career media of Russia’s largest food retailer.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Sfera X5", logo: "images/logos/sfera.png", url: "https://www.setters.media/a-teams/next-big-thing", image: "images/covers/03-nextbig.jpg", extra: "" },
   { title: "New Communities", info: "MYS — developer of low-rise residential communities.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "MYS", logo: "images/logos/mys.png", url: "https://www.setters.media/article/new-communities", image: "images/covers/04-communities.jpg", extra: "" },
   { title: "Delivery Robots", info: "Yandex Rovers — autonomous delivery robots by Yandex.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Yandex", logo: "images/logos/yarovers.png", url: "https://www.setters.media/post/kurery-na-vse-vremena", image: "images/covers/05-rovers.jpg", extra: "" },
+  { title: "All in Plus", info: "Yandex Plus — Yandex’s subscription that bundles music, films, books and other services.", role: "Special project for SETTERS Media: art direction, key visual, longread design and data visualisation.", platform: "", client: "Yandex Plus", logo: "images/logos/yandex-plus.svg", url: "", image: "images/covers/31-yandex-plus.jpg", extra: "" },
+  { title: "Body Language", info: "Siberian Wellness — international manufacturer of natural health and wellness products.", role: "Visual concept for an article on women’s health: AI photography in the brand palette, infographics and product layouts.", platform: "", client: "Siberian Wellness", logo: "images/logos/siberian.svg", url: "", image: "images/covers/30-siberian.jpg", extra: "" },
   { title: "Sigma SMM", info: "Marketing agency from Samara: social media, production, websites and branding. Top-10 in Russian SMM rankings.", role: "Brand visuals and social media design for the agency, website design, print production.", platform: "", client: "Sigma SMM", tag: "Multipage website", logo: "images/logos/sigma.png", url: "https://sigmasmm.ru/ru/", image: "images/covers/06-sigma.jpg", extra: "" },
   { title: "1802 Ventures", info: "Venture firm backing visionary entrepreneurs — inspired by the past, illuminating the future.", role: "Corporate website design.", platform: "Webflow", client: "1802 Ventures", logo: "images/logos/v1802.png", url: "https://www.1802ventures.co", image: "images/covers/07-v1802.jpg", extra: "" },
   { title: "Seller vs Algorithm", info: "Yandex Market — one of Russia’s largest marketplaces.", role: "Special project design: art direction, key visual and longread layout.", platform: "", client: "Yandex Market", logo: "images/logos/ymarket.png", url: "https://market.yandex.ru/", image: "images/covers/08-ymarket.jpg", extra: "" },
@@ -291,8 +293,6 @@ const PROJECTS = [
   { title: "Mosquito Nets", info: "Mosquito Nets Dubai — custom mosquito nets for windows, doors and villas across Dubai.", role: "Social media, website, client catalog, sales presentations, exhibition design and merch.", platform: "", client: "Mosquito Nets Dubai", logo: "images/logos/mosquito.png", url: "", image: "images/covers/27-mosquito.jpg", extra: "" },
   { title: "Window Repair UAE", info: "Window Repair UAE — window, door and glass repair across the UAE since 2014.", role: "Social media, website, client catalog, sales presentations, exhibition design and merch.", platform: "", client: "Window Repair UAE", logo: "images/logos/windowrepair.png", url: "", image: "images/covers/28-windowrepair.jpg", extra: "" },
   { title: "Dealer’s Voice", info: "Podcast about construction, business and money — live discussions in Saint Petersburg and Dubai.", role: "Podcast identity and website design.", platform: "", client: "Dealer’s Voice", logoText: "Dealer’s Voice", url: "", image: "images/covers/29-dealers.jpg", extra: "" },
-  { title: "Body Language", info: "Siberian Wellness — international manufacturer of natural health and wellness products.", role: "Visual concept and editorial design system for an article on women’s health: seven cards, icon and packshot components, infographics and AI photography in the brand palette.", platform: "", client: "Siberian Wellness", logo: "images/logos/siberian.svg", url: "", image: "images/covers/30-siberian.jpg", extra: "" },
-  { title: "All in Plus", info: "Yandex Plus — Yandex’s subscription that bundles music, films, books and other services.", role: "Special project for SETTERS Media: art direction, key visual, longread design and data visualisation.", platform: "", client: "Yandex Plus", logo: "images/logos/yandex-plus.svg", url: "", image: "images/covers/31-yandex-plus.jpg", extra: "" },
 ];
 
 /* Анимированные обложки. Ключ — номер проекта (с 0) в списке выше.
@@ -306,25 +306,25 @@ const ANIM = {
   1:  { layers: [["n_4_19511", 0, 0, 50.99, 100, "a-water", "clip"], ["f01_0", ...FULL]] },
   2:  { layers: [["f02_0", ...FULL], ["n_6_3365", 33.177, 20.413, 41.094, 79.026, "a-stride", "ob"], ["n_6_3361", 76.823, 37.74, 11.042, 21.234, "a-floatspin"]] },
   3:  { layers: [["f03_0", ...FULL], ["f03_1", ...FULL, "a-draw"]] },
-  5:  { bg: "#1e1e20", layers: [["n_11_14938", 2.857, 4.207, 29.571, 82.418, "a-float", "", 0], ["n_11_14909", 35.214, 4.207, 29.571, 82.418, "a-float", "", -1.8], ["n_11_14929", 67.571, 4.207, 29.571, 82.418, "a-float", "", -3.6], ["f05_0", ...FULL]] },
-  6:  { layers: [["f06_0", ...FULL], ["n_11_14662", 26.25, 0, 47.475, 61.347, "a-grow", "ot"]] },
-  7:  { layers: [["f07_0", ...FULL], ["n_10_10926", 58.333, 38.064, 20.402, 28.736, "a-card", "", 0], ["n_10_10930", 60.583, 25.921, 21.228, 31.93, "a-card", "", -0.9], ["n_10_10932", 65.357, 23.319, 20.575, 27.731, "a-card", "", -1.8], ["n_10_10936", 68.695, 13.878, 21.769, 32.744, "a-card", "", -2.7], ["n_10_10938", 73.388, 7.876, 18.934, 32.691, "a-card", "", -3.6]] },
-  8:  { bg: "#f2f2f2", layers: [["n_6_5143", 76.875, 5.409, 23.125, 76.153, "a-hang", "", -1], ["n_6_5193", 50.313, 33.173, 25.55, 61.419, "a-hang", "", -3], ["n_6_5253", 0, 31.851, 17.008, 61.419, "a-hang", "", -2], ["n_6_5441", 0, 33.173, 16.988, 61.419, "a-hang", "", -2], ["n_6_5325", 17.982, 5.409, 31.68, 76.153, "a-hang", "", -4.5]] },
-  9:  { layers: [["f09_0", ...FULL], ["n_13_17564", 12.375, 34.736, 43.065, 65.264, "a-down"], ["n_13_17562", 27.938, 0, 52.875, 57.332, "a-up"]] },
-  10: { fx: "liquid" },
-  11: { rec: "rec_dar" },   // запись с сайта: наведение подсвечивает персонажа, клик открывает подсказку
-  12: { layers: [["jet_base", ...FULL], ["jet_star", 34.61, 10.28, 15.34, 29.49, "a-star"], ["jet_spiral", 0, 43.16, 11.09, 26.32, "a-spring"]] },  // двигаются только звёздочка и спираль
-  13: { fx: "sheen" },
-  15: { bg: "#f0f0f0", layers: [["f15_0", ...FULL, "a-drift"], ["n_6_9469", 0.982, 0, 52.254, 100, "a-breath", "ob", 0], ["n_6_9470", 46.607, 0, 53.393, 100, "a-breath", "ob", -3]] },
-  16: { bg: "#000", layers: [["f16_0", ...FULL, "a-pattern"], ["n_6_8517", 19.14, 5.273, 68.646, 94.727, "a-breath", "ob"]] },
-  17: { rec: "rec_fox" },   // запись первого экрана сайта Фоксфорда
-  18: { layers: [["rec_wiam", 10.585, 0, 78.83, 100, "", "round"]] },  // запись первого экрана wiam.group, вместе с бегущей строкой
-  19: { fx: "glow" },
-  20: { rec: "rec_alist" },  // запись с сайта: наведение на карточки героев
-  22: { bg: "#f2f2f2", layers: [["n_7_9593", 15.812, 4.928, 68.375, 95.072, "a-sink"]] },
-  23: { layers: [["f23_0", ...FULL], ["n_13_19671", 0, 16.948, 30.002, 81.009, "a-kb", "clip", 0], ["n_13_19685", 30.636, 26.66, 38.752, 71.39, "a-kb", "clip", -5], ["n_13_19694", 70.167, 6.045, 29.833, 91.911, "a-kb", "clip", -10], ["f23_1", ...FULL]] },
-  24: { layers: [["stonetree_long", 0, 0, 100, 919.471, "a-longscroll"]] },  // визуальный гайд листается сверху вниз
-  28: { layers: [["f28_0", ...FULL], ["n_13_21219", 34.866, 11.873, 55.163, 88.127, "a-tablet"]] },
+  7:  { bg: "#1e1e20", layers: [["n_11_14938", 2.857, 4.207, 29.571, 82.418, "a-float", "", 0], ["n_11_14909", 35.214, 4.207, 29.571, 82.418, "a-float", "", -1.8], ["n_11_14929", 67.571, 4.207, 29.571, 82.418, "a-float", "", -3.6], ["f05_0", ...FULL]] },
+  8:  { layers: [["f06_0", ...FULL], ["n_11_14662", 26.25, 0, 47.475, 61.347, "a-grow", "ot"]] },
+  9:  { layers: [["f07_0", ...FULL], ["n_10_10926", 58.333, 38.064, 20.402, 28.736, "a-card", "", 0], ["n_10_10930", 60.583, 25.921, 21.228, 31.93, "a-card", "", -0.9], ["n_10_10932", 65.357, 23.319, 20.575, 27.731, "a-card", "", -1.8], ["n_10_10936", 68.695, 13.878, 21.769, 32.744, "a-card", "", -2.7], ["n_10_10938", 73.388, 7.876, 18.934, 32.691, "a-card", "", -3.6]] },
+  10:  { bg: "#f2f2f2", layers: [["n_6_5143", 76.875, 5.409, 23.125, 76.153, "a-hang", "", -1], ["n_6_5193", 50.313, 33.173, 25.55, 61.419, "a-hang", "", -3], ["n_6_5253", 0, 31.851, 17.008, 61.419, "a-hang", "", -2], ["n_6_5441", 0, 33.173, 16.988, 61.419, "a-hang", "", -2], ["n_6_5325", 17.982, 5.409, 31.68, 76.153, "a-hang", "", -4.5]] },
+  11:  { layers: [["f09_0", ...FULL], ["n_13_17564", 12.375, 34.736, 43.065, 65.264, "a-down"], ["n_13_17562", 27.938, 0, 52.875, 57.332, "a-up"]] },
+  12: { fx: "liquid" },
+  13: { rec: "rec_dar" },   // запись с сайта: наведение подсвечивает персонажа, клик открывает подсказку
+  14: { layers: [["jet_base", ...FULL], ["jet_star", 34.61, 10.28, 15.34, 29.49, "a-star"], ["jet_spiral", 0, 43.16, 11.09, 26.32, "a-spring"]] },  // двигаются только звёздочка и спираль
+  15: { fx: "sheen" },
+  17: { bg: "#f0f0f0", layers: [["f15_0", ...FULL, "a-drift"], ["n_6_9469", 0.982, 0, 52.254, 100, "a-breath", "ob", 0], ["n_6_9470", 46.607, 0, 53.393, 100, "a-breath", "ob", -3]] },
+  18: { bg: "#000", layers: [["f16_0", ...FULL, "a-pattern"], ["n_6_8517", 19.14, 5.273, 68.646, 94.727, "a-breath", "ob"]] },
+  19: { rec: "rec_fox" },   // запись первого экрана сайта Фоксфорда
+  20: { layers: [["rec_wiam", 10.585, 0, 78.83, 100, "", "round"]] },  // запись первого экрана wiam.group, вместе с бегущей строкой
+  21: { fx: "glow" },
+  22: { rec: "rec_alist" },  // запись с сайта: наведение на карточки героев
+  24: { bg: "#f2f2f2", layers: [["n_7_9593", 15.812, 4.928, 68.375, 95.072, "a-sink"]] },
+  25: { layers: [["f23_0", ...FULL], ["n_13_19671", 0, 16.948, 30.002, 81.009, "a-kb", "clip", 0], ["n_13_19685", 30.636, 26.66, 38.752, 71.39, "a-kb", "clip", -5], ["n_13_19694", 70.167, 6.045, 29.833, 91.911, "a-kb", "clip", -10], ["f23_1", ...FULL]] },
+  26: { layers: [["stonetree_long", 0, 0, 100, 919.471, "a-longscroll"]] },  // визуальный гайд листается сверху вниз
+  30: { layers: [["f28_0", ...FULL], ["n_13_21219", 34.866, 11.873, 55.163, 88.127, "a-tablet"]] },
 };
 /* ========================================================= */
 
