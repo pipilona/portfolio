@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polina Maslovets — Portfolio</title>
+<meta name="description" content="Polina Maslovets — designer. Portfolio of web and editorial projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Anton&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --bg:#efeff7; --bg-top:#efeff7; --bg-bot:#efeff7; --fg:#1d1a1a; --muted:rgba(29,26,26,.3); --soft:rgba(29,26,26,.55); --line:rgba(29,26,26,.07); --ph:rgba(255,255,255,.4);
+  --gut:6px; --top:34px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:linear-gradient(180deg,var(--bg-top),var(--bg-bot)) fixed;color:var(--fg);font:400 11px/1.35 'IBM Plex Mono',ui-monospace,Menlo,monospace;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* vertical grid lines */
+.lines{position:fixed;inset:0;pointer-events:none;display:grid;grid-template-columns:repeat(4,1fr);z-index:0}
+.lines i{border-left:1px solid var(--line)}
+.lines i:first-child{border-left:0}
+
+/* header / footer */
+header,footer{position:fixed;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);padding:0 var(--gut);pointer-events:none}
+header>*,footer>*{pointer-events:auto}
+header{top:0;align-items:start;padding-top:4px;background:linear-gradient(var(--bg-top) 60%,transparent)}
+footer{bottom:0;padding-bottom:4px;align-items:end;background:linear-gradient(transparent,var(--bg-bot) 50%)}
+.name{font-size:clamp(20px,2.4vw,34px);letter-spacing:-.03em;line-height:1;font-weight:400}
+.bio{max-width:30ch;color:var(--soft);padding-top:4px}
+.ctl{display:flex;justify-content:space-between;padding-top:4px}
+.ctl button{padding:0}
+.off{color:var(--muted)}
+.socials{display:flex;justify-content:space-between;grid-column:4}
+
+/* list view */
+.view{position:fixed;inset:0;z-index:1;transition:opacity .5s}
+.view.hidden{opacity:0;pointer-events:none}
+.titles{position:absolute;left:50%;width:25%;top:0;bottom:0;overflow:hidden;
+  -webkit-mask:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.titles a{position:absolute;left:0;top:0;white-space:nowrap;font-size:clamp(18px,2vw,28px);letter-spacing:-.02em;line-height:1;color:var(--muted);transition:color .25s;will-change:transform}
+.titles a.on{color:var(--fg);font-weight:500}
+.titles a:hover{color:var(--soft)}
+.titles a.on:hover{color:var(--fg)}
+.preview{position:absolute;left:0;width:50%;top:50%;transform:translateY(-50%);padding:0 var(--gut) 0 var(--gut)}
+.preview .frame{position:relative;width:100%;aspect-ratio:16/11;max-height:56vh;overflow:hidden;cursor:pointer}
+.preview .frame>*{position:absolute;inset:0;transition:opacity .45s}
+.info{position:absolute;left:75%;width:25%;top:50%;transform:translateY(-50%);padding:0 var(--gut);transition:opacity .25s}
+.info dl{display:grid;grid-template-columns:1fr 1.25fr;row-gap:9px;column-gap:8px}
+.info dt{color:var(--muted)}
+.info dd a:after{content:" ↗"}
+.info .more{margin-top:18px;display:flex;gap:10px}
+.info .more a:hover,.info .more button:hover{color:var(--soft)}
+.info .extra{margin-top:12px;color:var(--soft);max-width:36ch;display:none}
+.info.open .extra{display:block}
+
+/* media placeholder / image */
+.media{width:100%;height:100%;object-fit:cover;display:block}
+.preview .media{position:absolute;left:0;right:0;top:50%;height:auto;aspect-ratio:25/13;transform:translateY(-50%);object-fit:cover}
+.media{border-radius:24px}
+.media.live{border-radius:24px;isolation:isolate}
+/* logos: equal visual weight — size is set from each logo's proportions in JS */
+.info .logo{display:block;max-width:100%;object-fit:contain;object-position:left center}
+.info .logo-text{display:block;font:400 30px/1 Anton,Impact,sans-serif;letter-spacing:.01em;text-transform:uppercase;white-space:nowrap}
+.media.live{position:relative;overflow:hidden;container-type:inline-size}
+.preview .media.live{position:absolute;left:0;right:0;top:50%;height:auto;aspect-ratio:25/13;transform:translateY(-50%)}
+.live .bg{display:block;width:100%;height:100%;object-fit:cover}
+.live .ring{position:absolute;aspect-ratio:1;translate:-50% -50%;rotate:var(--a0,0deg);animation:spin 200s linear infinite;pointer-events:none}
+@keyframes spin{from{rotate:var(--a0,0deg)}to{rotate:calc(var(--a0,0deg) + 360deg)}}
+
+/* animated covers: each cover is rebuilt from its Figma layers, only the right part moves */
+.anim .ly{position:absolute;pointer-events:none}
+.anim .ly.clip{overflow:hidden}
+.anim .ly>img{display:block;width:100%;height:100%;animation-delay:var(--d,0s);will-change:transform}
+.anim .ly.full{inset:0}
+.anim .ly.ob>img{transform-origin:50% 100%}
+.anim .ly.ot>img{transform-origin:50% 0}
+.a-breathe{animation:breathe 7s ease-in-out infinite alternate}
+@keyframes breathe{from{transform:scale(1.06) rotate(-3deg)}to{transform:scale(1.2) rotate(4deg)}}
+.a-water{animation:water 5s ease-in-out infinite alternate}
+@keyframes water{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.16) translate(-3%,2%)}}
+.a-stride{animation:stride 1.4s ease-in-out infinite alternate}
+@keyframes stride{from{transform:translateY(0) rotate(-.8deg)}to{transform:translateY(-2.6%) rotate(1.4deg)}}
+.a-floatspin{animation:floatspin 3.2s ease-in-out infinite alternate}
+@keyframes floatspin{from{transform:translateY(6%) rotate(-10deg)}to{transform:translateY(-8%) rotate(14deg)}}
+.a-draw{animation:draw 6s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes draw{0%{clip-path:inset(0 100% 0 0);opacity:1}45%{clip-path:inset(0 0 0 0);opacity:1}85%{clip-path:inset(0 0 0 0);opacity:1}100%{clip-path:inset(0 0 0 0);opacity:0}}
+.a-drive{animation:drive 4s ease-in-out infinite alternate}
+/* robot comes from the horizon towards the viewer, then rolls past */
+.a-approach{transform-origin:48.5% 100%;animation:approach 5.5s cubic-bezier(.5,0,.85,.65) infinite}
+@keyframes approach{0%{transform:translate(4%,-43%) scale(.12);opacity:0}7%{opacity:1}22%{transform:translate(3.4%,-37.5%) scale(.24)}38%{transform:translate(2.6%,-29%) scale(.4)}54%{transform:translate(1.6%,-18%) scale(.62)}72%{transform:translate(0,0) scale(1);opacity:1}84%{transform:translate(-.6%,1.2%) scale(1.04);opacity:1}100%{transform:translate(-4%,14%) scale(1.45);opacity:0}}
+.a-star{animation:star 6s ease-in-out infinite alternate}
+@keyframes star{from{transform:translateY(4%) rotate(-25deg)}to{transform:translateY(-8%) rotate(35deg)}}
+.a-spring{transform-origin:50% 100%;animation:spring 1.6s cubic-bezier(.3,1.5,.6,1) infinite alternate}
+@keyframes spring{from{transform:scaleY(.82) rotate(-4deg)}to{transform:scaleY(1.12) rotate(5deg) translateY(-4%)}}
+.a-longscroll{animation:longscroll 18s ease-in-out infinite}
+@keyframes longscroll{0%,4%{transform:translateY(0)}88%,93%{transform:translateY(-89.124%)}100%{transform:translateY(0)}}
+.anim canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.anim .ly.round{overflow:hidden;border-radius:1.5cqw}
+@keyframes drive{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
+.a-float{animation:float 2.8s ease-in-out infinite alternate}
+@keyframes float{from{transform:translateY(2.2%)}to{transform:translateY(-3%)}}
+.a-grow{animation:grow 5s ease-in-out infinite alternate}
+@keyframes grow{from{transform:scale(1)}to{transform:scale(1.11)}}
+.a-card{animation:card 2.4s ease-in-out infinite alternate}
+@keyframes card{from{transform:translate(0,3%) rotate(.6deg)}to{transform:translate(-3%,-8%) rotate(-2.5deg)}}
+.a-hang{animation:hang 2.8s ease-in-out infinite alternate}
+@keyframes hang{from{transform:translateY(-2.5%)}to{transform:translateY(2.5%)}}
+.a-up{animation:up 4s ease-in-out infinite alternate}
+@keyframes up{from{transform:translate(0,0)}to{transform:translate(3%,-7%)}}
+.a-down{animation:down 4.8s ease-in-out infinite alternate}
+@keyframes down{from{transform:translate(0,0)}to{transform:translate(-3%,7%)}}
+.a-pop{animation:pop 7s cubic-bezier(.3,1.4,.5,1) infinite}
+@keyframes pop{0%{transform:scale(.86) translateY(4%);opacity:0}12%{transform:none;opacity:1}82%{transform:none;opacity:1}92%,100%{transform:scale(.94);opacity:0}}
+.a-drift{animation:drift 5s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1.12) translateX(-4.5%)}to{transform:scale(1.12) translateX(4.5%)}}
+.a-breath{animation:breath 2.6s ease-in-out infinite alternate}
+@keyframes breath{from{transform:scale(1)}to{transform:scale(1.05)}}
+.a-pattern{animation:pattern 8s ease-in-out infinite alternate}
+@keyframes pattern{from{transform:scale(1.18) rotate(-4deg)}to{transform:scale(1.18) rotate(4deg) translateX(3%)}}
+.a-eye{animation:eye 2.2s ease-in-out infinite alternate}
+@keyframes eye{from{transform:translateY(3%) rotate(-1.5deg)}to{transform:translateY(-5%) rotate(1.5deg)}}
+.a-blink{animation:blink 2.6s steps(1) infinite;transform-origin:50% 60%}
+@keyframes blink{0%,88%,96%{transform:none}90%,94%{transform:scaleY(.08)}}
+.a-tilt{animation:tilt 4.5s ease-in-out infinite alternate}
+@keyframes tilt{from{transform:perspective(1400px) rotateY(-11deg) rotateX(4deg)}to{transform:perspective(1400px) rotateY(11deg) rotateX(-3deg)}}
+.a-sink{animation:sink 3.4s ease-in-out infinite alternate}
+@keyframes sink{from{transform:translateY(0)}to{transform:translateY(5%)}}
+.a-kb{animation:kb 6s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.2) translate(-2.5%,1.5%)}}
+.a-phones{animation:phones 2.8s ease-in-out infinite alternate}
+@keyframes phones{from{transform:translateY(3%) rotate(-2.5deg)}to{transform:translateY(-5%) rotate(2.5deg)}}
+.a-scroll{animation:scroll 4.5s ease-in-out infinite alternate}
+@keyframes scroll{from{transform:scale(1.12) translateY(5%)}to{transform:scale(1.12) translateY(-5%)}}
+.a-tablet{animation:tablet 3s ease-in-out infinite alternate}
+@keyframes tablet{from{transform:translate(0,0)}to{transform:translate(-2.5%,4.5%)}}
+/* whole-image effects for covers that are a single flat picture */
+.fx-scan:after{content:"";position:absolute;left:0;right:0;height:28%;top:-28%;background:linear-gradient(transparent,rgba(110,130,255,.32) 70%,rgba(220,230,255,.6) 74%,transparent 76%);mix-blend-mode:screen;animation:scan 4.5s linear infinite}
+@keyframes scan{to{top:100%}}
+.fx-sheen:after{content:"";position:absolute;inset:-20% -60%;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.28) 50%,transparent 58%);animation:sheen 3.6s ease-in-out infinite}
+@keyframes sheen{0%,20%{transform:translateX(-45%)}70%,100%{transform:translateX(45%)}}
+.fx-glow>.base{animation:grow 6s ease-in-out infinite alternate}
+.fx-glow:after{content:"";position:absolute;inset:0;background:radial-gradient(28% 38% at 64% 52%,rgba(255,140,60,.55),transparent 70%);mix-blend-mode:screen;animation:glow 2.2s ease-in-out infinite alternate}
+@keyframes glow{from{opacity:.15}to{opacity:.75}}
+.fx-liquid .flow{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:url(#liquid);
+  -webkit-mask:radial-gradient(32% 46% at 44% 62%,transparent 55%,#000 100%);mask:radial-gradient(32% 46% at 44% 62%,transparent 55%,#000 100%)}
+.anim .base{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* covers out of sight (hidden view or off-screen) don't spend CPU */
+.view.hidden .anim *,.view.hidden .anim:after,.anim.off *,.anim.off:after,.view.hidden .live .ring,.live.off .ring{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){ .anim *,.anim:after,.live .ring{animation:none!important} .fx-liquid .flow{display:none} }
+.ph{display:flex;align-items:flex-end;padding:12px;color:#fff;font-size:clamp(22px,3vw,48px);letter-spacing:-.04em;line-height:.9;font-weight:500}
+
+/* grid view */
+#gridView{overflow:hidden}
+#gridView{touch-action:none;user-select:none;-webkit-user-select:none}
+.gtrack{position:absolute;left:0;top:0;will-change:transform;backface-visibility:hidden}
+.gcard{position:absolute;cursor:pointer}
+.gcard .m{overflow:hidden;width:100%;aspect-ratio:var(--ar,4/3);border-radius:24px}
+.gcard img{-webkit-user-drag:none}
+@media (hover:hover) and (pointer:fine){ .gcard .m{cursor:none} }
+/* cursor label over cards */
+#cur{position:fixed;left:0;top:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .25s,scale .35s cubic-bezier(.2,.8,.2,1);scale:.8;will-change:transform}
+#cur.on{opacity:1;scale:1}
+#cur .pill{display:inline-flex;white-space:nowrap;padding:8px 13px;border-radius:2px;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);color:var(--fg);transform:translate(-50%,-50%)}
+#cur .ch{position:relative;display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.35em;margin-bottom:-.35em;perspective:600px}
+#cur .ch>span{display:inline-block;transition:transform .48s cubic-bezier(.65,0,.35,1),opacity .48s,filter .48s;transition-delay:var(--dl)}
+#cur .ch>span:first-child{transform-origin:50% 100%}
+#cur .ch>span:last-child{position:absolute;left:0;top:0;transform-origin:50% 0;transform:translateY(100%) rotateX(75deg);opacity:0;filter:blur(4px)}
+#cur.on .ch>span:first-child{transform:translateY(-100%) rotateX(-75deg);opacity:0;filter:blur(4px)}
+#cur.on .ch>span:last-child{transform:none;opacity:1;filter:none}
+.gcard .cap{display:flex;justify-content:space-between;padding-top:6px;font-size:11px}
+.gcard .cap span:last-child{color:var(--soft);text-align:right;margin-left:8px}
+
+/* preloader */
+#pre{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));display:flex;align-items:center;justify-content:space-between;padding:0 var(--gut);transition:opacity .7s}
+#pre.done{opacity:0;pointer-events:none}
+#pre .box{position:absolute;left:50%;top:50%;width:min(24vw,240px);aspect-ratio:25/13;transform:translate(-50%,-50%);overflow:hidden;border-radius:24px}
+#pre .box>*{position:absolute;inset:0}
+
+/* mobile */
+@media (max-width:767px){
+  .lines{grid-template-columns:repeat(2,1fr)}
+  .lines i:nth-child(n+3){display:none}
+  header{grid-template-columns:1fr 1fr;row-gap:6px}
+  .bio{grid-column:1/-1;order:3;padding-top:0}
+  .ctl{grid-column:2;grid-row:1;gap:0}
+  footer{grid-template-columns:1fr}
+  .socials{grid-column:1;gap:12px;justify-content:flex-start;padding-top:4px}
+  .preview{width:100%;top:calc(var(--top) + 64px);transform:none}
+  .preview .frame{max-height:none;aspect-ratio:25/13}
+  .titles{left:var(--gut);width:50%;top:calc(var(--top) + 64px + 34vh);bottom:40px}
+  .info{left:50%;width:50%;top:calc(var(--top) + 64px + 34vh + 24px);transform:none}
+  .info dl{grid-template-columns:1fr;row-gap:2px}
+  .info dt{margin-top:6px}
+  #pre .box{width:50vw}
+}
+</style>
+</head>
+<body>
+<!-- liquid distortion for The Voice cover: the hair flows, the face stays sharp -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="liquid" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.009" numOctaves="2" seed="7">
+      <animate attributeName="baseFrequency" dur="6s" values="0.004 0.009;0.006 0.013;0.004 0.009" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div id="pre">
+  <span id="preName"></span>
+  <div class="box" id="preBox"></div>
+  <span id="prePct">0%</span>
+</div>
+
+<div class="lines"><i></i><i></i><i></i><i></i></div>
+
+<header>
+  <a class="name" href="./" id="name"></a>
+  <p class="bio" id="bio"></p>
+  <div class="ctl">
+    <span><button data-view="list" id="bList">list</button> / <button data-view="grid" id="bGrid" class="off">grid</button></span>
+  </div>
+</header>
+
+<main>
+  <section class="view" id="listView">
+    <div class="preview"><div class="frame" id="frame"></div></div>
+    <nav class="titles" id="titles"></nav>
+    <aside class="info" id="info"></aside>
+  </section>
+  <section class="view hidden" id="gridView"><div class="gtrack" id="gtrack"></div></section>
+  <div id="cur" aria-hidden="true"><div class="pill"></div></div>
+</main>
+
+<footer>
+  <a id="email"></a>
+  <span></span><span></span>
+  <nav class="socials" id="socials"></nav>
+</footer>
+
+<script>
+/* =========================================================
+   ВСЁ, ЧТО НУЖНО МЕНЯТЬ, — ЗДЕСЬ.
+   Картинки кладите в папку images/ рядом с этим файлом
+   и указывайте путь: image: "images/project.jpg".
+   Пока image пустой — показывается цветная заглушка.
+   ========================================================= */
+const SITE = {
+  name:  "Polina Maslovets",
+  bio:   "Designer. Web and editorial special projects for media, venture funds and brands.",
+  email: "poli.maslovets@gmail.com",
+  socials: [
+    { label: "LinkedIn",  url: "https://www.linkedin.com/in/polina-maslovets/" },
+    { label: "Behance",   url: "https://www.behance.net/poliuxui" },
+    { label: "Telegram",  url: "https://t.me/pipipipilona" },
+  ],
+};
+
+const PROJECTS = [
+  // порядок и обложки — из Figma (Portfolio Covers); logo — логотип клиента для колонки Info
+  { title: "Co-lab", info: "Conference on health and longevity management, bringing together a wide audience and the medical expert community.", role: "Navigation map and big-screen presentations for every speaker of the event.", platform: "WordPress", client: "Co-lab", logo: "images/logos/colab.png", url: "https://co-lab.pro/", image: "images/covers/01-colab.jpg", extra: "" },
+  { title: "Work & Hobbies", info: "T2 — Russian mobile operator.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "T2", logo: "images/logos/t2.png", url: "https://www.setters.media/article/work-and-hobbies", image: "images/covers/02-hobbies.jpg", extra: "" },
+  { title: "Next Big Thing", info: "Sfera by X5 Group — tech and career media of Russia’s largest food retailer.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Sfera X5", logo: "images/logos/sfera.png", url: "https://www.setters.media/a-teams/next-big-thing", image: "images/covers/03-nextbig.jpg", extra: "" },
+  { title: "New Communities", info: "MYS — developer of low-rise residential communities.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "MYS", logo: "images/logos/mys.png", url: "https://www.setters.media/article/new-communities", image: "images/covers/04-communities.jpg", extra: "" },
+  { title: "Delivery Robots", info: "Yandex Rovers — autonomous delivery robots by Yandex.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Yandex", logo: "images/logos/yarovers.png", url: "https://www.setters.media/post/kurery-na-vse-vremena", image: "images/covers/05-rovers.jpg", extra: "" },
+  { title: "Sigma SMM", info: "Marketing agency from Samara: social media, production, websites and branding. Top-10 in Russian SMM rankings.", role: "Brand visuals and social media design for the agency, website design, print production.", platform: "", client: "Sigma SMM", tag: "Multipage website", logo: "images/logos/sigma.png", url: "https://sigmasmm.ru/ru/", image: "images/covers/06-sigma.jpg", extra: "" },
+  { title: "1802 Ventures", info: "Venture firm backing visionary entrepreneurs — inspired by the past, illuminating the future.", role: "Corporate website design.", platform: "Webflow", client: "1802 Ventures", logo: "images/logos/v1802.png", url: "https://www.1802ventures.co", image: "images/covers/07-v1802.jpg", extra: "" },
+  { title: "Seller vs Algorithm", info: "Yandex Market — one of Russia’s largest marketplaces.", role: "Special project design: art direction, key visual and longread layout.", platform: "", client: "Yandex Market", logo: "images/logos/ymarket.png", url: "https://market.yandex.ru/", image: "images/covers/08-ymarket.jpg", extra: "" },
+  { title: "Paradox of Choice", info: "Ozon Select — curated fashion and lifestyle section of the Ozon marketplace.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Ozon Select", logo: "images/logos/ozon.png", url: "https://www.setters.media/article/problema-vybora", image: "images/covers/09-ozonselect.jpg", extra: "" },
+  { title: "Managed Aging", info: "Robb Report — Russian edition of the international luxury lifestyle magazine.", role: "Special project design: key visual and longread layout.", platform: "", client: "Robb Report", logo: "images/logos/rr.png", url: "https://robb.report/specials/upravlyaemoe-starenie/", image: "images/covers/10-robb.jpg", extra: "" },
+  { title: "The Voice", info: "The Voice — online magazine about beauty, fashion and people.", role: "Key visual and editorial design.", platform: "", client: "The Voice", logo: "images/logos/voice.png", url: "https://www.thevoicemag.ru/", image: "images/covers/11-voice.jpg", extra: "" },
+  { title: "Reading at Home", info: "Dar — real estate developer; Podpisnye Izdaniya — independent bookstore from Saint Petersburg.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Dar × Podpisnye Izdaniya", logo: "images/logos/dar.png", url: "https://www.setters.media/article/chtenie-na-dom", image: "images/covers/12-chtenie.jpg", extra: "" },
+  { title: "Cyber Threats", info: "Jet Infosystems — Russian IT company and cybersecurity integrator.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Jet Infosystems", logo: "images/logos/jet.png", url: "https://www.setters.media/article/cybersecurity", image: "images/covers/13-cyber.jpg", extra: "" },
+  { title: "Business Contours", info: "Kontur — ecosystem of business software for accounting, reporting and document flow.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Kontur", logo: "images/logos/kontur.png", url: "https://www.setters.media/post/what-to-read-to-act", image: "images/covers/14-kontur.jpg", extra: "" },
+  { title: "Dodo Brands", info: "Dodo Brands — international restaurant group behind Dodo Pizza, present in 27 countries.", role: "Company page design for Vagabond.", platform: "Webflow", client: "Dodo Brands", logo: "images/logos/dodo.png", url: "", image: "images/covers/15-dodo.jpg", extra: "" },
+  { title: "Hiring 2026", info: "Cian — Russia’s leading real estate listings platform.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Cian", logo: "images/logos/cian.png", url: "https://www.setters.media/post/hiring-2026", image: "images/covers/16-hiring.jpg", extra: "" },
+  { title: "Maison David", info: "Rendez-Vous — Russian fashion retailer, home of the Maison David brand.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "Rendez-Vous", logo: "images/logos/rdv.png", url: "https://www.setters.media/post/maison-david-interview", image: "images/covers/17-maison.jpg", extra: "" },
+  { title: "Education Check", info: "Foxford — online school for students of grades 1–11 and exam preparation.", role: "Special project design: art direction, key visual and longread layout.", platform: "", client: "Foxford", logo: "images/logos/foxford.png", url: "https://foxford.ru/", image: "images/covers/18-foxford.jpg", extra: "" },
+  { title: "WIAM Group", info: "Singapore-based fintech group building online credit and installment finance for growing markets.", role: "Corporate website design.", platform: "", client: "WIAM Group", logo: "images/logos/wiam.png", url: "https://wiam.group/", image: "images/covers/19-wiam.jpg", extra: "" },
+  { title: "Hypernova Fund", info: "Venture fund investing in early-stage startups of the space economy.", role: "Website design and visual concept.", platform: "Framer", client: "Hypernova Fund", logo: "images/logos/hypernova.png", url: "https://www.hypernovafund.vc", image: "images/covers/20-hypernova.jpg", extra: "" },
+  { title: "SETTERS A-list 2025", info: "SETTERS Media — online magazine about careers, business and culture for a new generation of professionals.", role: "Flagship special project design: art direction, 3D key visual and layout.", platform: "Webflow", client: "SETTERS Media", logo: "images/logos/setters.svg", url: "https://www.setters.media/setters-a-list-2025", image: "images/covers/21-alist.jpg", extra: "" },
+  { title: "100 Events", info: "SETTERS Media — online magazine about careers, business and culture for a new generation of professionals.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "SETTERS Media", logo: "images/logos/setters.svg", url: "https://www.setters.media/article/100", image: "images/covers/22-s100.jpg", live: { bg: "images/covers/22-s100-bg.jpg", ring: "images/covers/22-s100-ring.webp", x: 50, y: 53.386, w: 106.688, a0: 14.34, period: 200 }, extra: "" },
+  { title: "Forecasts 2025", info: "SETTERS Media — online magazine about careers, business and culture for a new generation of professionals.", role: "Special project design: art direction, key visual and longread layout.", platform: "Webflow", client: "SETTERS Media", logo: "images/logos/setters.svg", url: "https://www.setters.media/bezotvetstvennye-prognozy/2025", image: "images/covers/23-prog25.jpg", extra: "" },
+  { title: "Nova Noir", info: "Beauty salon in Business Bay, Dubai.", role: "Visual identity for the salon’s social media.", platform: "", client: "Nova Noir", logo: "images/logos/novanoir.png", url: "", image: "images/covers/24-novanoir.jpg", extra: "" },
+  { title: "Stonetree", info: "Stonetree Holding — Dubai real estate group: rentals, sales, property management and servicing.", role: "Real estate platform design for web and mobile; visual guide, brand book, presentations, proposals, estimates, catalogs and all client materials.", platform: "", client: "Stonetree Holding", logo: "images/logos/stonetree.png", url: "https://stonetree.ae/", image: "images/covers/25-stonetree.jpg", extra: "" },
+  { title: "Aluminum Windows", info: "Aluminum Windows UAE — Dubai manufacturer of aluminium windows, doors and glazing with its own factory.", role: "Social media, website, client catalog, sales presentations, exhibition design and merch.", platform: "", client: "Aluminum Windows UAE", logo: "images/logos/aluminum.png", url: "https://aluminumwindows.ae/", image: "images/covers/26-aluminum.jpg", extra: "" },
+  { title: "Mosquito Nets", info: "Mosquito Nets Dubai — custom mosquito nets for windows, doors and villas across Dubai.", role: "Social media, website, client catalog, sales presentations, exhibition design and merch.", platform: "", client: "Mosquito Nets Dubai", logo: "images/logos/mosquito.png", url: "", image: "images/covers/27-mosquito.jpg", extra: "" },
+  { title: "Window Repair UAE", info: "Window Repair UAE — window, door and glass repair across the UAE since 2014.", role: "Social media, website, client catalog, sales presentations, exhibition design and merch.", platform: "", client: "Window Repair UAE", logo: "images/logos/windowrepair.png", url: "", image: "images/covers/28-windowrepair.jpg", extra: "" },
+  { title: "Dealer’s Voice", info: "Podcast about construction, business and money — live discussions in Saint Petersburg and Dubai.", role: "Podcast identity and website design.", platform: "", client: "Dealer’s Voice", logoText: "Dealer’s Voice", url: "", image: "images/covers/29-dealers.jpg", extra: "" },
+];
+
+/* Анимированные обложки. Ключ — номер проекта (с 0) в списке выше.
+   Слои снизу вверх: [файл, x, y, w, h (% кадра), класс анимации, опции, задержка].
+   Слой "full" занимает весь кадр; опции: clip — двигается внутри своей рамки,
+   ob/ot — точка опоры снизу/сверху. fx — эффект поверх плоской обложки. */
+const A = "images/covers/anim/";
+const FULL = [0, 0, 100, 100];
+const ANIM = {
+  0:  { layers: [["n_3_403", ...FULL, "a-breathe"], ["f00_0", ...FULL]] },
+  1:  { layers: [["n_4_19511", 0, 0, 50.99, 100, "a-water", "clip"], ["f01_0", ...FULL]] },
+  2:  { layers: [["f02_0", ...FULL], ["n_6_3365", 33.177, 20.413, 41.094, 79.026, "a-stride", "ob"], ["n_6_3361", 76.823, 37.74, 11.042, 21.234, "a-floatspin"]] },
+  3:  { layers: [["f03_0", ...FULL], ["f03_1", ...FULL, "a-draw"]] },
+  5:  { bg: "#1e1e20", layers: [["n_11_14938", 2.857, 4.207, 29.571, 82.418, "a-float", "", 0], ["n_11_14909", 35.214, 4.207, 29.571, 82.418, "a-float", "", -1.8], ["n_11_14929", 67.571, 4.207, 29.571, 82.418, "a-float", "", -3.6], ["f05_0", ...FULL]] },
+  6:  { layers: [["f06_0", ...FULL], ["n_11_14662", 26.25, 0, 47.475, 61.347, "a-grow", "ot"]] },
+  7:  { layers: [["f07_0", ...FULL], ["n_10_10926", 58.333, 38.064, 20.402, 28.736, "a-card", "", 0], ["n_10_10930", 60.583, 25.921, 21.228, 31.93, "a-card", "", -0.9], ["n_10_10932", 65.357, 23.319, 20.575, 27.731, "a-card", "", -1.8], ["n_10_10936", 68.695, 13.878, 21.769, 32.744, "a-card", "", -2.7], ["n_10_10938", 73.388, 7.876, 18.934, 32.691, "a-card", "", -3.6]] },
+  8:  { bg: "#f2f2f2", layers: [["n_6_5143", 76.875, 5.409, 23.125, 76.153, "a-hang", "", -1], ["n_6_5193", 50.313, 33.173, 25.55, 61.419, "a-hang", "", -3], ["n_6_5253", 0, 31.851, 17.008, 61.419, "a-hang", "", -2], ["n_6_5441", 0, 33.173, 16.988, 61.419, "a-hang", "", -2], ["n_6_5325", 17.982, 5.409, 31.68, 76.153, "a-hang", "", -4.5]] },
+  9:  { layers: [["f09_0", ...FULL], ["n_13_17564", 12.375, 34.736, 43.065, 65.264, "a-down"], ["n_13_17562", 27.938, 0, 52.875, 57.332, "a-up"]] },
+  10: { fx: "liquid" },
+  11: { rec: "rec_dar" },   // запись с сайта: наведение подсвечивает персонажа, клик открывает подсказку
+  12: { layers: [["jet_base", ...FULL], ["jet_star", 34.61, 10.28, 15.34, 29.49, "a-star"], ["jet_spiral", 0, 43.16, 11.09, 26.32, "a-spring"]] },  // двигаются только звёздочка и спираль
+  13: { fx: "sheen" },
+  15: { bg: "#f0f0f0", layers: [["f15_0", ...FULL, "a-drift"], ["n_6_9469", 0.982, 0, 52.254, 100, "a-breath", "ob", 0], ["n_6_9470", 46.607, 0, 53.393, 100, "a-breath", "ob", -3]] },
+  16: { bg: "#000", layers: [["f16_0", ...FULL, "a-pattern"], ["n_6_8517", 19.14, 5.273, 68.646, 94.727, "a-breath", "ob"]] },
+  17: { rec: "rec_fox" },   // запись первого экрана сайта Фоксфорда
+  18: { layers: [["rec_wiam", 10.585, 0, 78.83, 100, "", "round"]] },  // запись первого экрана wiam.group, вместе с бегущей строкой
+  19: { fx: "glow" },
+  20: { rec: "rec_alist" },  // запись с сайта: наведение на карточки героев
+  22: { bg: "#f2f2f2", layers: [["n_7_9593", 15.812, 4.928, 68.375, 95.072, "a-sink"]] },
+  23: { layers: [["f23_0", ...FULL], ["n_13_19671", 0, 16.948, 30.002, 81.009, "a-kb", "clip", 0], ["n_13_19685", 30.636, 26.66, 38.752, 71.39, "a-kb", "clip", -5], ["n_13_19694", 70.167, 6.045, 29.833, 91.911, "a-kb", "clip", -10], ["f23_1", ...FULL]] },
+  24: { layers: [["stonetree_long", 0, 0, 100, 919.471, "a-longscroll"]] },  // визуальный гайд листается сверху вниз
+  26: { canvas: "mesh" },  // кубики падают как тетрис и собирают сетку, потом сетка раздвигается
+  28: { layers: [["f28_0", ...FULL], ["n_13_21219", 34.866, 11.873, 55.163, 88.127, "a-tablet"]] },
+};
+/* ========================================================= */
+
+const $ = s => document.querySelector(s);
+const N = PROJECTS.length;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function media(p, i){
+  // live cover: the site's first screen with its rotating ring, rebuilt from two layers
+  if (p.live){ const L = p.live;
+    return `<div class="media live"><img class="bg" src="${esc(L.bg)}" alt="${esc(p.title)}"><img class="ring" src="${esc(L.ring)}" alt="" style="left:${L.x}%;top:${L.y}%;width:${L.w}%;--a0:${L.a0}deg;animation-duration:${L.period}s"></div>`; }
+  const an = ANIM[i];
+  if (an && an.canvas) return `<div class="media live anim" role="img" aria-label="${esc(p.title)}"><canvas class="cv-${an.canvas}"></canvas></div>`;
+  if (an && an.rec) return `<div class="media live anim"><img class="base" src="${A}${an.rec}.webp" alt="${esc(p.title)}"></div>`;
+  if (an && an.fx){
+    const extra = an.fx === "liquid" ? `<img class="flow" src="${esc(p.image)}" alt="">` : "";
+    return `<div class="media live anim fx-${an.fx}"><img class="base" src="${esc(p.image)}" alt="${esc(p.title)}">${extra}</div>`;
+  }
+  if (an){
+    const ly = an.layers.map(([src, x, y, w, h, cls = "", opt = "", d = 0]) => {
+      const full = x === 0 && y === 0 && w === 100 && h === 100;
+      return `<div class="ly ${full ? "full" : ""} ${opt}"${full ? "" : ` style="left:${x}%;top:${y}%;width:${w}%;height:${h}%"`}><img src="${A}${src}.webp" alt="" class="${cls}" style="--d:${d}s"></div>`;
+    }).join("");
+    return `<div class="media live anim" role="img" aria-label="${esc(p.title)}"${an.bg ? ` style="background:${an.bg}"` : ""}>${ly}</div>`;
+  }
+  if (p.image) return `<img class="media" src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">`;
+  const h = (i * 47 + 210) % 360;
+  return `<div class="media ph" style="background:linear-gradient(135deg,hsl(${h} 45% 62%),hsl(${(h+40)%360} 55% 28%))">${esc(p.title)}</div>`;
+}
+
+/* static bits */
+$("#name").textContent = SITE.name;
+$("#preName").textContent = SITE.name;
+$("#bio").textContent = SITE.bio;
+$("#email").textContent = SITE.email; $("#email").href = "mailto:" + SITE.email;
+$("#socials").innerHTML = SITE.socials.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join("");
+
+/* ---------- preloader ---------- */
+(function(){
+  const box = $("#preBox"), pct = $("#prePct"), pre = $("#pre");
+  let t0 = performance.now(), dur = 1800, last = -1;
+  (function tick(now){
+    const k = Math.max(0, Math.min(1, (now - t0) / dur));
+    pct.textContent = Math.round(k * 100) + "%";
+    const idx = Math.min(N - 1, Math.floor(k * N));
+    if (idx !== last){ box.innerHTML = media(PROJECTS[idx], idx); last = idx; }
+    if (k < 1) requestAnimationFrame(tick); else pre.classList.add("done");
+  })(t0);
+})();
+
+/* ---------- shared infinite scroll driver ---------- */
+let view = "list";
+const S = { list:{cur:0,target:0} };
+let idleTimer;
+
+addEventListener("wheel", e => {
+  e.preventDefault();
+  if (view !== "list") return;
+  S.list.target += e.deltaY * .6;
+  scheduleSnap();
+}, {passive:false});
+
+let touchY = null;
+addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, {passive:true});
+addEventListener("touchmove", e => {
+  if (touchY == null || view !== "list") return;
+  const y = e.touches[0].clientY; S[view].target += (touchY - y) * 1.2; touchY = y; scheduleSnap();
+}, {passive:true});
+addEventListener("touchend", () => { touchY = null; });
+addEventListener("keydown", e => {
+  if (view !== "list") return;
+  if (e.key === "ArrowDown"){ S.list.target = (Math.round(S.list.target / itemH) + 1) * itemH; }
+  if (e.key === "ArrowUp"){ S.list.target = (Math.round(S.list.target / itemH) - 1) * itemH; }
+});
+function scheduleSnap(){
+  clearTimeout(idleTimer);
+  if (view === "list") idleTimer = setTimeout(() => { S.list.target = Math.round(S.list.target / itemH) * itemH; }, 160);
+}
+
+/* ---------- list view ---------- */
+const titles = $("#titles"), frame = $("#frame"), info = $("#info");
+let itemH = 30, copies = 1, nodes = [], active = -1;
+
+function buildList(){
+  const fs = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const probe = document.createElement("a"); probe.textContent = "Hg"; titles.appendChild(probe);
+  itemH = probe.getBoundingClientRect().height * 1.12; probe.remove();
+  copies = Math.max(2, Math.ceil((innerHeight * 1.6) / (N * itemH)) + 1);
+  titles.innerHTML = "";
+  nodes = [];
+  for (let c = 0; c < copies; c++) PROJECTS.forEach((p, i) => {
+    const a = document.createElement("a");
+    a.href = "#"; a.textContent = p.title; a.dataset.i = i;
+    const k = c * N + i;
+    a.onclick = e => {
+      e.preventDefault();
+      // scroll to the nearest instance of this item
+      const total = N * copies * itemH;
+      const y = parseFloat(a.dataset.y);
+      S.list.target += y - centerY();
+    };
+    titles.appendChild(a); nodes.push({a, k});
+  });
+}
+const centerY = () => titles.clientHeight / 2 - itemH / 2;
+const mod = (a, b) => ((a % b) + b) % b;
+
+function renderList(){
+  const total = N * copies * itemH, cy = centerY();
+  let best = null, bestD = 1e9;
+  for (const n of nodes){
+    let y = mod(n.k * itemH - S.list.cur + cy, total);
+    if (y > total - itemH * 2) y -= total;          // keep a row above the top
+    n.a.style.transform = `translateY(${y}px)`;
+    n.a.dataset.y = y;
+    const d = Math.abs(y - cy);
+    if (d < bestD){ bestD = d; best = n; }
+  }
+  const half = titles.clientHeight / 2;
+  for (const n of nodes){
+    const on = n === best;
+    n.a.classList.toggle("on", on);
+    // the further from the selected title, the deeper the fade
+    const t = Math.min(1, Math.abs(parseFloat(n.a.dataset.y) - cy) / half);
+    n.a.style.opacity = on ? 1 : (0.06 + 0.5 * Math.pow(1 - t, 1.6)).toFixed(3);
+  }
+  const i = +best.a.dataset.i;
+  if (i !== active) setActive(i);
+}
+
+// every logo gets the same visual area, so wide and square marks look equally big
+function sizeLogo(img){
+  const r = img.naturalWidth / img.naturalHeight || 1, area = 6400;
+  let w = Math.sqrt(area * r), h = Math.sqrt(area / r);
+  if (h > 72){ h = 72; w = h * r; }
+  const max = img.parentElement.clientWidth || 200;
+  if (w > max){ w = max; h = w / r; }
+  img.style.width = w.toFixed(1) + "px"; img.style.height = h.toFixed(1) + "px";
+}
+
+function setActive(i){
+  active = i;
+  const p = PROJECTS[i];
+  const el = document.createElement("div");
+  el.innerHTML = media(p, i); el.style.opacity = 0;
+  frame.appendChild(el);
+  requestAnimationFrame(() => { el.style.opacity = 1; });
+  while (frame.children.length > 2) frame.firstChild.remove();
+  setTimeout(() => { while (frame.children.length > 1 && frame.lastChild === el) frame.firstChild.remove(); }, 460);
+
+  const logo = p.logoText ? `<span class="logo-text">${esc(p.logoText)}</span>`
+    : p.logo ? `<img class="logo" src="${esc(p.logo)}" alt="${esc(p.client)}" onload="sizeLogo(this)">` : esc(p.client);
+  const rows = [["Info", esc(p.info)], ["Role", esc(p.role)], ["Client", logo]].filter(r => r[1]);
+  if (p.awards) rows.push(["Awards", esc(p.awards)]);
+  if (p.collab) rows.push(["Collaboration", p.collabUrl ? `<a href="${esc(p.collabUrl)}" target="_blank" rel="noopener">${esc(p.collab)}</a>` : esc(p.collab)]);
+  info.classList.remove("open");
+  info.innerHTML = `<dl>${rows.map(([k,v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+    <div class="more">${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">View site</a>` : ""}${p.extra ? `<button id="plus">[+]</button>` : ""}</div>
+    ${p.extra ? `<p class="extra">${esc(p.extra)}</p>` : ""}`;
+  const plus = $("#plus");
+  if (plus) plus.onclick = () => { info.classList.toggle("open"); plus.textContent = info.classList.contains("open") ? "[–]" : "[+]"; };
+}
+
+/* ---------- grid view: canvas that follows the mouse ---------- */
+const gridView = $("#gridView"), gtrack = $("#gtrack");
+// per-card offsets inside its column: [left shift, width, top gap] as shares of column width
+const PATTERN = [
+  [.30,.62,.10], [.22,.66,.30], [.12,.60,.18],
+  [.06,.72,.08], [.10,.80,.14], [.18,.62,.22],
+  [.04,.66,.12], [.24,.64,.06], [.14,.58,.20],
+];
+const G = { x:0, y:0, tx:0, ty:0, rx:0, ry:0, ix:0, iy:0, touch:false, down:false, dragged:false, lx:0, ly:0, vx:0, vy:0, sx:0, sy:0 };
+// right side of a grid caption: the client, unless it just repeats the title
+function capRight(p){
+  const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9а-яё]+/g, "");
+  const a = norm(p.title), b = norm(p.client);
+  if (p.tag) return p.tag;
+  return a && b && (a.includes(b) || b.includes(a)) ? "" : (p.client || "");
+}
+function buildGrid(){
+  const W = innerWidth, H = innerHeight, mobile = W < 768;
+  const cols = mobile ? 2 : 3, FW = mobile ? W : Math.round(W * 1.35), colW = FW / cols;
+  const colY = mobile ? [H * .12, H * .2] : [H * .08, H * .2, H * .13];
+  let html = "";
+  PROJECTS.forEach((p, i) => {
+    // next card goes to the shortest column, so all columns end together
+    const c = colY.indexOf(Math.min(...colY)), [sx, sw, sg] = mobile ? [.04, .92, .08] : PATTERN[i % PATTERN.length];
+    const w = colW * sw, h = (w - 12) * 13 / 25 + 26;
+    const left = c * colW + colW * sx * (mobile ? 1 : (1 - sw) / .4);
+    const top = colY[c] + colW * sg * (mobile ? .5 : .55);
+    colY[c] = top + h;
+    html += `<div class="gcard" data-i="${i}" style="left:${left.toFixed(1)}px;top:${top.toFixed(1)}px;width:${w.toFixed(1)}px;padding:0 var(--gut);--ar:25/13">
+      <div class="m">${media(p, i)}</div>
+      <div class="cap"><span>${esc(p.title)}</span><span>${esc(capRight(p))}</span></div></div>`;
+  });
+  const FH = Math.max(...colY) + H * .06;
+  gtrack.style.width = FW + "px"; gtrack.style.height = FH + "px";
+  gtrack.innerHTML = html;
+  // pause covers that slide out of the viewport
+  if ("IntersectionObserver" in window){
+    if (window._coverIO) window._coverIO.disconnect();
+    window._coverIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("off", !e.isIntersecting)));
+    gtrack.querySelectorAll(".media.live").forEach(m => window._coverIO.observe(m));
+  }
+  G.ix = Math.round((W - FW) / 2); G.iy = Math.round((H - FH) / 2);
+  G.rx = Math.max(0, (FW - W) / 2); G.ry = Math.max(0, (FH - H) / 2) + 40;
+  // start at the top, where the strongest projects are
+  G.tx = G.x = 0; G.ty = G.y = G.ry;
+  gtrack.querySelectorAll(".gcard").forEach(c => c.onclick = e => {
+    if (G.dragged){ e.preventDefault(); G.dragged = false; return; }
+    if (openProject(+c.dataset.i)) return;
+    switchView("list");
+    const i = +c.dataset.i;
+    S.list.target = S.list.cur = Math.round(S.list.cur / itemH / N) * N * itemH + i * itemH;
+  });
+}
+// distance from the centre -> how far the canvas slides (eased towards the edges)
+function edge(n, zone){
+  const p = Math.min(1, Math.abs(n) / (1 - zone));
+  return Math.sign(n) * (1 - Math.pow(1 - p, 1.4));
+}
+const clampG = () => { G.tx = Math.max(-G.rx, Math.min(G.rx, G.tx)); G.ty = Math.max(-G.ry, Math.min(G.ry, G.ty)); };
+addEventListener("pointermove", e => {
+  if (view !== "grid") return;
+  if (e.pointerType === "touch"){
+    if (!G.down) return;
+    const dx = e.clientX - G.lx, dy = e.clientY - G.ly;
+    if (Math.abs(e.clientX - G.sx) > 6 || Math.abs(e.clientY - G.sy) > 6) G.dragged = true;
+    G.vx = dx; G.vy = dy; G.tx += dx; G.ty += dy; G.lx = e.clientX; G.ly = e.clientY; clampG();
+  } else {
+    G.touch = false;
+    const nx = Math.max(-1, Math.min(1, (e.clientX / innerWidth - .5) * 2));
+    const ny = Math.max(-1, Math.min(1, (e.clientY / innerHeight - .5) * 2));
+    G.tx = -edge(nx, .02) * G.rx; G.ty = -edge(ny, .2) * G.ry;
+  }
+}, {passive:true});
+gridView.addEventListener("pointerdown", e => {
+  if (e.pointerType !== "touch") return;
+  Object.assign(G, { touch:true, down:true, dragged:false, sx:e.clientX, sy:e.clientY, lx:e.clientX, ly:e.clientY, vx:0, vy:0 });
+});
+addEventListener("pointerup", e => { if (e.pointerType === "touch") G.down = false; });
+addEventListener("pointercancel", () => { G.down = false; });
+function renderGrid(){
+  if (G.touch && !G.down && (Math.abs(G.vx) > .3 || Math.abs(G.vy) > .3)){
+    G.tx += G.vx; G.ty += G.vy; G.vx *= .92; G.vy *= .92; clampG();
+  }
+  const k = G.touch ? .12 : .06;
+  G.x += (G.tx - G.x) * k; G.y += (G.ty - G.y) * k;
+  gtrack.style.transform = `translate3d(${(G.ix + G.x).toFixed(2)}px,${(G.iy + G.y).toFixed(2)}px,0)`;
+}
+
+/* cursor label: follows the mouse, letters flip in on hover */
+const cur = $("#cur"), pill = cur.firstElementChild, C = { x:-100, y:-100, rx:-100, ry:-100, ok:false };
+let curLabel = "";
+function setLabel(t){
+  curLabel = t;
+  pill.innerHTML = [...t].map((ch, i) => { const c = ch === " " ? "&nbsp;" : esc(ch);
+    return `<span class="ch" style="--dl:${i * 22}ms"><span>${c}</span><span>${c}</span></span>`; }).join("");
+}
+setLabel("View site [+]");
+addEventListener("pointermove", e => {
+  C.x = e.clientX; C.y = e.clientY;
+  if (!C.ok){ C.rx = C.x; C.ry = C.y; C.ok = true; }
+}, {passive:true});
+document.addEventListener("mouseover", e => {
+  const m = e.target.closest && e.target.closest(".gcard .m");
+  if (!m || !matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  const p = PROJECTS[+m.parentElement.dataset.i];
+  const label = p && p.url ? "View site [+]" : "Open project [+]";
+  if (label !== curLabel) setLabel(label);
+  cur.classList.remove("on"); void cur.offsetWidth; cur.classList.add("on");
+});
+document.addEventListener("mouseout", e => {
+  const m = e.target.closest && e.target.closest(".gcard .m");
+  if (!m) return;
+  const next = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".gcard .m");
+  if (!next) cur.classList.remove("on");
+});
+function renderCursor(){
+  C.rx += (C.x - C.rx) * .12; C.ry += (C.y - C.ry) * .12;
+  cur.style.transform = `translate3d(${C.rx.toFixed(1)}px,${C.ry.toFixed(1)}px,0)`;
+}
+
+function openProject(i){
+  const url = PROJECTS[i] && PROJECTS[i].url;
+  // a real link click (not window.open), so it also works where pop-ups are blocked
+  if (url){ const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+  return !!url;
+}
+frame.addEventListener("click", () => openProject(active));
+
+/* ---------- view switch ---------- */
+function switchView(v){
+  view = v;
+  $("#listView").classList.toggle("hidden", v !== "list");
+  $("#gridView").classList.toggle("hidden", v !== "grid");
+  $("#bList").classList.toggle("off", v !== "list");
+  $("#bGrid").classList.toggle("off", v !== "grid");
+  if (v !== "grid") cur.classList.remove("on");
+}
+document.querySelectorAll("[data-view]").forEach(b => b.onclick = () => switchView(b.dataset.view));
+
+/* ---------- Mosquito Nets cover: blocks fall like tetris and build a net, then the net slides open ---------- */
+const MESH = (() => {
+  const C = 30, R = 15, CYCLE = 9.5;                 // net cells; seconds per loop
+  const GOLD = [214, 176, 98], logo = new Image(); logo.src = "images/logos/mosquito.png";
+  // split the net into tetris pieces, filled from the bottom row up
+  const SHAPES = [[[0,0],[1,0],[2,0],[3,0]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[0,1],[1,1],[2,1]],[[2,0],[0,1],[1,1],[2,1]],
+                  [[1,0],[0,1],[1,1],[2,1]],[[1,0],[2,0],[0,1],[1,1]],[[-1,0],[0,0],[0,1],[1,1]],[[0,0],[1,0],[2,0]],[[0,0],[1,0]],[[0,0]]];
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const own = Array.from({length: R}, () => Array(C).fill(-1)), pieces = [];
+  for (let r = R - 1; r >= 0; r--) for (let c = 0; c < C; c++) {
+    if (own[r][c] >= 0) continue;
+    const order = SHAPES.slice(0, 7).sort(() => rnd() - .5).concat(SHAPES.slice(7));
+    for (const sh of order) {
+      // shapes are drawn top-down; anchor the piece so its bottom sits on row r
+      const h = Math.max(...sh.map(p => p[1])), cells = sh.map(([x, y]) => [c + x, r - h + y]);
+      if (cells.every(([x, y]) => x >= 0 && x < C && y >= 0 && y <= r && own[y][x] < 0)) {
+        cells.forEach(([x, y]) => own[y][x] = pieces.length); pieces.push({cells, low: r}); break;
+      }
+    }
+  }
+  pieces.forEach((p, i) => { p.order = i + rnd() * 6; p.hue = rnd(); });
+  pieces.sort((a, b) => a.order - b.order).forEach((p, i, a) => p.t0 = 0.25 + i / a.length * 3.6);
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function draw(cv, now) {
+    const box = cv.getBoundingClientRect(); if (!box.width) return;
+    const dpr = Math.min(2, devicePixelRatio || 1), W = Math.round(box.width * dpr), H = Math.round(box.height * dpr);
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+    const g = cv.getContext("2d"), t = reduce ? 5 : (now / 1000) % CYCLE;
+    // room and window opening
+    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, "#232221"); bg.addColorStop(1, "#141413");
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const cell = Math.floor(Math.min(W * .62 / C, H * .74 / R)), fw = cell * C, fh = cell * R;
+    const fx = Math.round((W - fw) / 2), fy = Math.round((H - fh) / 2 + H * .02), lw = Math.max(2, cell * .14);
+    // what is behind the net: dusk light and the logo
+    const sky = g.createLinearGradient(0, fy, 0, fy + fh); sky.addColorStop(0, "#3a3326"); sky.addColorStop(1, "#1f1c17");
+    g.fillStyle = sky; g.fillRect(fx, fy, fw, fh);
+    // net halves slide apart in the second scene, close again before the loop restarts
+    const open = t < 5.4 ? 0 : t < 7 ? ease((t - 5.4) / 1.6) : t < 8.6 ? 1 : 1 - ease(Math.min(1, (t - 8.6) / .9));
+    // the logo waits behind the net and comes up as it opens
+    if (logo.complete && logo.naturalWidth) { const lw2 = fw * .42, lh = lw2 * logo.naturalHeight / logo.naturalWidth;
+      g.globalAlpha = .08 + .92 * open; g.drawImage(logo, fx + (fw - lw2) / 2, fy + (fh - lh) / 2, lw2, lh); g.globalAlpha = 1; }
+    const fade = t > 8.6 ? 1 - Math.min(1, (t - 8.6) / .9) : 1;
+    g.save(); g.beginPath(); g.rect(fx, fy, fw, fh); g.clip();
+    for (const p of pieces) {
+      const k = Math.min(1, Math.max(0, (t - p.t0) / .55)); if (k <= 0) continue;
+      const fall = (1 - k * k) * (fy + fh * .9);      // gravity: accelerates down into place
+      const settled = t > 4.6 ? Math.min(1, (t - 4.6) / .7) : 0;
+      for (const [x, y] of p.cells) {
+        const half = x < C / 2 ? -1 : 1, dx = half * open * (fw / 2 + cell);
+        const px = fx + x * cell + dx, py = fy + y * cell - fall;
+        const a = .18 + p.hue * .25;
+        g.globalAlpha = fade;
+        g.fillStyle = `rgba(${GOLD},${a * (1 - settled * .85)})`; g.fillRect(px + 1, py + 1, cell - 2, cell - 2);
+        g.strokeStyle = `rgba(${GOLD},${.55 + .45 * settled})`; g.lineWidth = Math.max(1, dpr * .9);
+        g.strokeRect(px + .5, py + .5, cell - 1, cell - 1);
+      }
+    }
+    g.restore(); g.globalAlpha = 1;
+    // the frame of the opening
+    g.strokeStyle = "#4a4743"; g.lineWidth = lw; g.strokeRect(fx - lw / 2, fy - lw / 2, fw + lw, fh + lw);
+    g.strokeStyle = "rgba(255,255,255,.08)"; g.lineWidth = Math.max(1, dpr); g.strokeRect(fx - lw, fy - lw, fw + lw * 2, fh + lw * 2);
+  }
+  return now => document.querySelectorAll("canvas.cv-mesh").forEach(cv => {
+    const m = cv.parentElement; if (m.classList.contains("off") || cv.closest(".view.hidden")) return; draw(cv, now);
+  });
+})();
+
+/* ---------- loop ---------- */
+function loop(){
+  const L = S.list; L.cur += (L.target - L.cur) * .12; if (Math.abs(L.target - L.cur) < .05) L.cur = L.target;
+  renderList(); renderGrid(); renderCursor(); MESH(performance.now());
+  requestAnimationFrame(loop);
+}
+function build(){ buildList(); buildGrid(); active = -1; }
+build();
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(build, 150); });
+loop();
+</script>
+</body>
+</html>
